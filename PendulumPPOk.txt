@@ -1,0 +1,77 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Proximal Policy Optimization Pendulum\
+What I learnt\
+\
+Actor and Critic\
+Actor:\
+	Makes either discrete or continuous decisions on\
+	Actions in a given state. For continuous, it predicts\
+	The mean and standard deviation for the normal\
+	distribution and for np.random.normal to sample \
+	from.\
+Critic:\
+	Acts as a critic and runs parallel to the actor in the \
+	forward pass. It predicts values in a given state, \
+	which is later used in computing the GAE, which \
+	is then used to backprop the Actor. This is a good \
+	way in which we can learn on policy, act, observe, \
+	and adapt without knowing how the rewards\
+	are truly calculated. A good practical method to\
+	use in real-world situations.\
+\
+Backprop Values:\
+	The loss for the Critic is essentially the mean squared\
+	difference from its own current model forward pass and\
+	The actual returns received are computed with GAE. This\
+	doesn\'92t have the problem of instability, just like DQN cartpole\
+	without target weights, as though it is technically trying\
+	To predict its predictions, the target returns are stable over time\
+	While the NN changes and updates. The advantages do\
+	also include real-world reward, which is a good way\
+	to stay grounded.\
+\
+	The loss for Actor is more complicated; it takes\
+	the ratio of the probability of taking the action taken with\
+	The old model, and now with the new updated model.\
+	This ensures that throughout the update, the model does not\
+	update or walk too far, creating a stable environment where\
+	Catastrophic Forgetting is less likely to occur. \
+\
+	The loss is computed separately for d_mean and d_std\
+	For the two weight matrices, respectively. The intuitive\
+	perspective of the loss function is to think, if the model\
+	has a higher chance now compared to before of taking this\
+	action, then closer we need to make the mean to this point,\
+	same goes for the d_std. If we predicted the mean well,\
+	then we would decrease the std, and in reverse, when we\
+	predict the mean to be off.\
+	\
+\
+GAE:\
+	GAE is Generalized Advantage Estimation, and a good\
+	way to model the value of a state; this works for finite\
+	and infinite MDPs. It is essentially a large equation that\
+	grows proportional to the number of time_steps per\
+	trajectory. As the number of terms grow in proportion \
+	to the number of time_steps\
+\
+	The one used in this project is:\
+		\
+	delta = rewards[t] + gamma * next_value - values[t]\
+	gae = delta + gamma * lambda_gae * gae\
+\
+	And it is essentially a Bellman equation where we telescope \
+	throughout to get a good and stable estimate of the value\
+	of a state. gamma and lambda_gae are parameters to be\
+	Decided, rewards are the actual rewards from the env, \
+	While the values are computed with the Critic. Hence it\
+	is a crucial intersection in which the Critic interacts with\
+	the Actor.\
+		 \
+	}
